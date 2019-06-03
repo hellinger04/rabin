@@ -5,29 +5,18 @@ public class Encrypt {
         Scanner kb = new Scanner(System.in);
 
         //prompt for user input
-        System.out.print("Enter the two positive integers to calculate GCD for: ");
-        int int1 = kb.nextInt();
-        int int2 = kb.nextInt();
+        System.out.print("Enter the public key: ");
+        int pubKey = kb.nextInt();
+        System.out.print("Enter the message to encrypt: ");
+        int message = kb.nextInt();
 
-        //we cannot calculate the GCD with negative or zero integers
-        if (int1 < 1 || int2 < 1) {
+        //we cannot encrypt with negative or zero integers
+        if (pubKey < 1 || message < 1) {
             throw new IllegalArgumentException();
         }
 
-        //if all good, calculate GCD and print results to screen
-        int gcd = euclid(int1, int2);
-        System.out.println("The GCD of " + int1 + " and " + int2 + " is " + gcd);
-    }
-
-    private static int euclid(int num1, int num2) {
-        do {
-            //Euclid's algorithm for calculating GCD
-            int remainder = num1 % num2;
-            num1 = num2;
-            num2 = remainder;
-        } while (num2 != 0); //run until we find a common divisor
-
-        //return gcd
-        return num1;
+        //if all good, encrypt original message and print results to screen
+        int encrypted = (message * message) % pubKey
+        System.out.println("The encrypted message is " + encrypted);
     }
 }
