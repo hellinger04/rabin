@@ -42,9 +42,10 @@ public class Decrypt {
 
         //print solutions to screen
         for (int i = 0; i < 4; i++) {
-            System.out.println("Solution " + (i + 1) + ": " + solutions[i]);
+            try {
+                System.out.println("Message: " + convert(solutions[i]));
+            } catch (IllegalArgumentException e) {}
         }
-
     }
 
     private static long chineseRemainder(long root1, long factor1,
@@ -139,15 +140,98 @@ public class Decrypt {
         return x;
     }
 
-    private static int euclid(int num1, int num2) {
-        do {
-            //Euclid's algorithm for calculating GCD
-            int remainder = num1 % num2;
-            num1 = num2;
-            num2 = remainder;
-        } while (num2 != 0); //run until we find a common divisor
+    private static String convert(long message) {
+        //base case - return nothing
+        if (message == 0) {
+            return "";
+        }
 
-        //return gcd
-        return num1;
+        char charValue;
+        int toConvert = (int) message % 100;
+
+        switch (toConvert) {
+        case 1:
+            charValue = 'a';
+            break;
+        case 2:
+            charValue = 'b';
+            break;
+        case 3:
+            charValue = 'c';
+            break;
+        case 4:
+            charValue = 'd';
+            break;
+        case 5:
+            charValue = 'e';
+            break;
+        case 6:
+            charValue = 'f';
+            break;
+        case 7:
+            charValue = 'g';
+            break;
+        case 8:
+            charValue = 'h';
+            break;
+        case 9:
+            charValue = 'i';
+            break;
+        case 10:
+            charValue = 'j';
+            break;
+        case 11:
+            charValue = 'k';
+            break;
+        case 12:
+            charValue = 'l';
+            break;
+        case 13:
+            charValue = 'm';
+            break;
+        case 14:
+            charValue = 'n';
+            break;
+        case 15:
+            charValue = 'o';
+            break;
+        case 16:
+            charValue = 'p';
+            break;
+        case 17:
+            charValue = 'q';
+            break;
+        case 18:
+            charValue = 'r';
+            break;
+        case 19:
+            charValue = 's';
+            break;
+        case 20:
+            charValue = 't';
+            break;
+        case 21:
+            charValue = 'u';
+            break;
+        case 22:
+            charValue = 'v';
+            break;
+        case 23:
+            charValue = 'w';
+            break;
+        case 24:
+            charValue = 'x';
+            break;
+        case 25:
+            charValue = 'y';
+            break;
+        case 26:
+            charValue = 'z';
+            break;
+        default:
+            throw new IllegalArgumentException();
+        }
+
+        return convert(message / 100) + charValue;
     }
 }
