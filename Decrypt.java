@@ -34,6 +34,11 @@ public class Decrypt {
         long root3 = roots(encrypted, factor2);
         long root4 = roots(encrypted * -1, factor2);
 
+        System.out.println("root 1: " + root1);
+        System.out.println("root 2: " + root2);
+        System.out.println("root 3: " + root3);
+        System.out.println("root 4: " + root4);
+
         long[] solutions = new long[4];
         solutions[0] = chineseRemainder(root1, factor1, root3, factor2);
         solutions[1] = chineseRemainder(root2, factor1, root3, factor2);
@@ -44,7 +49,7 @@ public class Decrypt {
         boolean success = false;
         for (int i = 0; i < 4; i++) {
             try {
-                System.out.println("Solution: " + solutions[i]);
+                // System.out.println("Solution: " + solutions[i]);
                 System.out.println("Message: " + convert(solutions[i]));
                 success = true;
             } catch (IllegalArgumentException e) {}
@@ -63,7 +68,12 @@ public class Decrypt {
         //determine what the power is
         long power = (factor + 1) / 4;
 
-        return power(encrypted, power, factor);
+        long result = power(encrypted, power, factor);
+        if (result < 0) {
+            result += factor;
+        }
+
+        return result;
     }
 
     private static long power(long x, long y, long p) {
@@ -109,12 +119,13 @@ public class Decrypt {
 
         //calculate the difference between the two roots
         long difference = root2 - root1;
-        System.out.println("Difference:" + difference);
+        // System.out.println("Difference:" + difference);
         //calculate the inverse of the first factor mod the second factor
         long inverse = extendedEuclid(factor1, factor2);
-        System.out.println("Inverse: " + inverse + "in Z" + factor2);
+        // System.out.println("Inverse: " + inverse + " in Z" + factor2);
         //multiply the difference and the inverse in Z(factor2)
         long remainder = multiply(difference, inverse, factor2);
+        // System.out.println("Remainder: " + remainder);
 
         //return the remainder when we plug back into original equation
         return (factor1 * remainder) + root1;
