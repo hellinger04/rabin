@@ -7,12 +7,12 @@ public class Decrypt {
 
         //prompt for user input
         System.out.print("Enter the encrypted message: ");
-        long encrypted = kb.nextInt();
+        long encrypted = kb.nextLong();
         System.out.print("Enter the public key: ");
-        long pubKey = kb.nextInt();
+        long pubKey = kb.nextLong();
         System.out.print("Enter the factorization of the public key: ");
-        long factor1 = kb.nextInt();
-        long factor2 = kb.nextInt();
+        long factor1 = kb.nextLong();
+        long factor2 = kb.nextLong();
 
         //we cannot decrypt with negative or zero integers
         if (pubKey < 1 || factor1 < 1 || factor2 < 1) {
@@ -34,6 +34,11 @@ public class Decrypt {
         long root3 = roots(pubKey, encrypted, factor2);
         long root4 = roots(pubKey, encrypted * -1, factor2);
 
+        System.out.println("root 1: " + root1);
+        System.out.println("root 2: " + root2);
+        System.out.println("root 3: " + root3);
+        System.out.println("root 4: " + root4);
+
         long[] solutions = new long[4];
         solutions[0] = chineseRemainder(root1, factor1, root3, factor2);
         solutions[1] = chineseRemainder(root2, factor1, root3, factor2);
@@ -43,6 +48,7 @@ public class Decrypt {
         //print solutions to screen
         for (int i = 0; i < 4; i++) {
             try {
+                System.out.println(solutions[i]);
                 System.out.println("Message: " + convert(solutions[i]));
             } catch (IllegalArgumentException e) {}
         }
@@ -63,10 +69,12 @@ public class Decrypt {
 
         //calculate the difference between the two roots
         long difference = root2 - root1;
+        System.out.println("Difference:" + difference);
         //calculate the inverse of the first factor mod the second factor
         long inverse = extendedEuclid(factor1, factor2);
+        System.out.println("Inverse: " + inverse + "in Z" + factor2);
         //multiply the difference and the inverse in Z(factor2)
-        long remainder = (difference * inverse) % factor2;
+        long remainder = multiply(difference, inverse, factor2);
 
         //return the remainder when we plug back into original equation
         return (factor1 * remainder) + root1;
@@ -77,6 +85,29 @@ public class Decrypt {
         long power = (factor + 1) / 4;
 
         return power(encrypted, power, factor);
+    }
+
+    private static long multiply(long x, long y, long mod) {
+        //initialize result
+        long result = 0;
+
+        x = x % mod;
+
+        while (y > 0) {
+            //if y is odd, add x to result
+            if (y % 2 == 1) {
+                result = (result + x) % mod;
+            }
+
+            //multiply x by 2
+            x = (x * 2) % mod;
+
+            //divide y by 2
+            y /= 2;
+        }
+
+        //return result
+        return result % mod;
     }
 
     private static long power(long x, long y, long p) {

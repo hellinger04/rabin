@@ -7,7 +7,7 @@ public class Encrypt {
 
         //prompt for user input
         System.out.print("Enter the public key: ");
-        long pubKey = kb.nextInt();
+        long pubKey = kb.nextLong();
         System.out.print("Enter the word to encrypt: ");
         String message = kb.next();
 
@@ -19,7 +19,6 @@ public class Encrypt {
         //if all good, convert original message to lowercase and then to
         //numerical form
         message = message.toLowerCase();
-        System.out.println(message);
         long numMessage = toNum(message);
 
         //encrypt and print results to screen
@@ -122,7 +121,6 @@ public class Encrypt {
             result = result + toAdd;
         }
 
-        System.out.println(result);
         return result;
     }
 }
