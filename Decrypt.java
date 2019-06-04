@@ -29,15 +29,10 @@ public class Decrypt {
             throw new IllegalArgumentException();
         }
 
-        long root1 = roots(pubKey, encrypted, factor1);
-        long root2 = roots(pubKey, encrypted * -1, factor1);
-        long root3 = roots(pubKey, encrypted, factor2);
-        long root4 = roots(pubKey, encrypted * -1, factor2);
-
-        System.out.println("root 1: " + root1);
-        System.out.println("root 2: " + root2);
-        System.out.println("root 3: " + root3);
-        System.out.println("root 4: " + root4);
+        long root1 = roots(encrypted, factor1);
+        long root2 = roots(encrypted * -1, factor1);
+        long root3 = roots(encrypted, factor2);
+        long root4 = roots(encrypted * -1, factor2);
 
         long[] solutions = new long[4];
         solutions[0] = chineseRemainder(root1, factor1, root3, factor2);
@@ -46,12 +41,57 @@ public class Decrypt {
         solutions[3] = chineseRemainder(root2, factor1, root4, factor2);
 
         //print solutions to screen
+        boolean success = false;
         for (int i = 0; i < 4; i++) {
             try {
-                System.out.println(solutions[i]);
+                System.out.println("Solution: " + solutions[i]);
                 System.out.println("Message: " + convert(solutions[i]));
+                success = true;
             } catch (IllegalArgumentException e) {}
         }
+
+        if (!success) {
+            for (int i = 0; i < 4; i++) {
+                try {
+                    System.out.println("Message: " + convert(pubKey - solutions[i]));
+                } catch (IllegalArgumentException e) {}
+            }
+        }
+    }
+
+    private static long roots(long encrypted, long factor) {
+        //determine what the power is
+        long power = (factor + 1) / 4;
+
+        return power(encrypted, power, factor);
+    }
+
+    private static long power(long x, long y, long p) {
+        //initialize result
+        long result = 1;
+
+        //make x positive
+        if (x < 0) {
+            x = x + p;
+        }
+
+        //ensure x is less than p
+        x = x % p;
+
+        //while y is positive
+        while (y > 0) {
+            //if y is odd, multiply x with result
+            if (y % 2 == 1) {
+                result = (result * x) % p;
+            }
+
+            //y must be even now
+            y = y / 2;
+            x = (x * x) % p;
+        }
+
+        //after while loop is complete, no more exponentiation is required
+        return result;
     }
 
     private static long chineseRemainder(long root1, long factor1,
@@ -80,12 +120,6 @@ public class Decrypt {
         return (factor1 * remainder) + root1;
     }
 
-    private static long roots(long pubKey, long encrypted, long factor) {
-        //determine what the power is
-        long power = (factor + 1) / 4;
-
-        return power(encrypted, power, factor);
-    }
 
     private static long multiply(long x, long y, long mod) {
         //initialize result
@@ -108,34 +142,6 @@ public class Decrypt {
 
         //return result
         return result % mod;
-    }
-
-    private static long power(long x, long y, long p) {
-        //initialize result
-        long result = 1;
-
-        //make x positive
-        while (x < 0) {
-            x = x + p;
-        }
-
-        //ensure x is less than p
-        x = x % p;
-
-        //while y is positive
-        while (y > 0) {
-            //if y is odd, multiply x with result
-            if (y % 2 == 1) {
-                result = (result * x) % p;
-            }
-
-            //y must be even now
-            y = y / 2;
-            x = (x * x) % p;
-        }
-
-        //after while loop is complete, no more exponentiation is required
-        return result;
     }
 
     private static long extendedEuclid(long a, long m) {

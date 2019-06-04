@@ -20,6 +20,7 @@ public class Encrypt {
         //numerical form
         message = message.toLowerCase();
         long numMessage = toNum(message);
+        System.out.println(numMessage);
 
         //encrypt and print results to screen
         long encrypted = (numMessage * numMessage) % pubKey;
