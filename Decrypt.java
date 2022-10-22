@@ -30,10 +30,12 @@ public class Decrypt {
         //if we add one to them, they are then divisible by four
         //TODO check for primality
         if ((factor1 + 1) % 4 != 0 || (factor2 + 1) % 4 != 0
-            || factor1 < 100000 || factor2 < 100000) {
-            System.out.println("ERROR: Each private key must be a prime number "
-                               + "that is greater than 100,000 and which has a "
-                               + "remainder of 3\nwhen divided by 4.");
+            || factor1 < 100000 || factor2 < 100000 || factor1 >= 1000000000
+            || factor2 >= 1000000000) {
+            System.out.println("ERROR: Each private key must be a unique prime "
+                               + "number that is greater than\n100,000 and less"
+                               + " than 1 billion. Each key must have a "
+                               + "remainder of 3 when\ndivided by 4.");
             throw new IllegalArgumentException();
         }
 

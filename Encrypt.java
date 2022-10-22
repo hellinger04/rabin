@@ -8,15 +8,19 @@ public class Encrypt {
         System.out.println("***WELCOME!***\n");
 
         System.out.println("This program uses the Rabin encryption algorithm. "
-                           + "You will first need to\ngenerate a public key. To"
-                           + " do this, first identify two prime numbers, p\n"
-                           + "and q. When each of these numbers are divided by "
-                           + "4, the remainder should\nbe 3.\n");
+                           + "Currently, the program\ncan only encrypt words "
+                           + "that are 5 alphabetic characters or less.\n");
 
-        System.out.println("After you have identified p and q, write these "
-                           + "numbers down. They are\nrequired to decrypt your "
-                           + "message. Then, multiply p and q together to\n"
-                           + "generate your public key.\n");
+        System.out.println("You will first need to generate a public key. To"
+                           + " do this, identify two\nunique prime numbers that"
+                           + " are each larger than 100,000 and less than\n"
+                           + "1 billion. When each of these numbers are "
+                           + "divided by 4, the remainder\nshould be 3.\n");
+
+        System.out.println("After you have identified these prime numbers, "
+                           + "write them down. They are\nrequired to decrypt "
+                           + "your message. Then, multiply the two prime "
+                           + "numbers\ntogether to generate your public key.\n");
 
         //prompt for user input
         System.out.print("Enter the public key: ");
