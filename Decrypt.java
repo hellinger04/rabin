@@ -10,9 +10,13 @@ public class Decrypt {
         long encrypted = kb.nextLong();
         System.out.print("Enter the public key: ");
         long pubKey = kb.nextLong();
-        System.out.print("Enter the factorization of the public key: ");
+        System.out.print("Enter the first factor of the public key: ");
         long factor1 = kb.nextLong();
+        System.out.print("Enter the second factor of the public key: ");
         long factor2 = kb.nextLong();
+        //System.out.println("Factor 1: " + factor1);
+        //System.out.println("Factor 2: " + factor2);
+
 
         //we cannot decrypt with negative or zero integers
         if (pubKey < 1 || factor1 < 1 || factor2 < 1) {
@@ -25,7 +29,11 @@ public class Decrypt {
         //we must ensure the factors of the public key are prime and that
         //if we add one to them, they are then divisible by four
         //TODO check for primality
-        if ((factor1 + 1) % 4 != 0 || (factor2 + 1) % 4 != 0) {
+        if ((factor1 + 1) % 4 != 0 || (factor2 + 1) % 4 != 0
+            || factor1 < 100000 || factor2 < 100000) {
+            System.out.println("ERROR: Each private key must be a prime number "
+                               + "that is greater than 100,000 and which has a "
+                               + "remainder of 3\nwhen divided by 4.");
             throw new IllegalArgumentException();
         }
 
@@ -34,11 +42,13 @@ public class Decrypt {
         long root3 = roots(encrypted, factor2);
         long root4 = roots(encrypted * -1, factor2);
 
-        System.out.println("root 1: " + root1);
-        System.out.println("root 2: " + root2);
-        System.out.println("root 3: " + root3);
-        System.out.println("root 4: " + root4);
+        //System.out.println("root 1: " + root1);
+        //System.out.println("root 2: " + root2);
+        //System.out.println("root 3: " + root3);
+        //System.out.println("root 4: " + root4);
 
+        //use the Chinese Remainder theorem to identify four possible
+        //solutions to the encrypted message
         long[] solutions = new long[4];
         solutions[0] = chineseRemainder(root1, factor1, root3, factor2);
         solutions[1] = chineseRemainder(root2, factor1, root3, factor2);
@@ -49,20 +59,31 @@ public class Decrypt {
         boolean success = false;
         for (int i = 0; i < 4; i++) {
             try {
-                // System.out.println("Solution: " + solutions[i]);
+                //System.out.println("Solution: " + solutions[i]);
                 System.out.println("Message: " + convert(solutions[i]));
                 success = true;
             } catch (IllegalArgumentException e) {}
         }
 
+        //if no solution has been found, try subtracting the solution from the
+        //public key to see if this generates a viable solution
         if (!success) {
             for (int i = 0; i < 4; i++) {
                 try {
                     System.out.println("Message: " + convert(pubKey - solutions[i]));
+                    success = true;
                 } catch (IllegalArgumentException e) {}
             }
         }
+
+        //if the solution still has not been found, print a message and end
+        //program
+        if (!success) {
+            System.out.println("Decryption failed. Please ensure you entered the "
+                               + "correct numbers.");
+        }
     }
+
 
     private static long roots(long encrypted, long factor) {
         //determine what the power is

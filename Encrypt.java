@@ -4,6 +4,20 @@ public class Encrypt {
     public static void main(String[] args) {
         Scanner kb = new Scanner(System.in);
 
+        //print instructions and welcome message to user
+        System.out.println("***WELCOME!***\n");
+
+        System.out.println("This program uses the Rabin encryption algorithm. "
+                           + "You will first need to\ngenerate a public key. To"
+                           + " do this, first identify two prime numbers, p\n"
+                           + "and q. When each of these numbers are divided by "
+                           + "4, the remainder should\nbe 3.\n");
+
+        System.out.println("After you have identified p and q, write these "
+                           + "numbers down. They are\nrequired to decrypt your "
+                           + "message. Then, multiply p and q together to\n"
+                           + "generate your public key.\n");
+
         //prompt for user input
         System.out.print("Enter the public key: ");
         long pubKey = kb.nextLong();
@@ -26,7 +40,6 @@ public class Encrypt {
         //numerical form
         message = message.toLowerCase();
         long numMessage = toNum(message);
-        System.out.println(numMessage);
 
         //encrypt and print results to screen
         long encrypted = (numMessage * numMessage) % pubKey;
